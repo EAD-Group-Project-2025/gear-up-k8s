@@ -73,20 +73,21 @@ spec:
             memory: "2Gi"
             cpu: "2000m"
         
-        livenessProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 8080
-          initialDelaySeconds: 300
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 6
+        # Commented out liveness probe to allow slow startup
+        # livenessProbe:
+        #   httpGet:
+        #     path: /actuator/health/liveness
+        #     port: 8080
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        #   failureThreshold: 6
         
         readinessProbe:
           httpGet:
             path: /actuator/health/readiness
             port: 8080
-          initialDelaySeconds: 240
+          initialDelaySeconds: 360
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
