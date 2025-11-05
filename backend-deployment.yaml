@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: gearup
+  labels:
+    app: backend
+    tier: application
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: application
+    spec:
+      containers:
+      - name: backend
+        image: adeepak2/gearup-backend:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        # Database Configuration
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: spring-datasource-url
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: spring-datasource-username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: spring-datasource-password
+        
+        # JWT Configuration
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: jwt-secret
+        
+        # Email Configuration
+        - name: MAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: mail-username
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: mail-password
+        
+        # ConfigMap values
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 240
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: gearup
+  labels:
+    app: backend
+    tier: application
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+
