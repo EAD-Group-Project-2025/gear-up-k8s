@@ -40,20 +40,41 @@ minikube addons enable ingress
 minikube status
 ```
 
-## Step 2: Update Configuration Files
+## Step 2: Configure Secrets Using .env File
 
-### Update Secrets (k8s/secrets.yaml)
-Replace the following values:
-- `postgres-password`: Strong password for PostgreSQL
-- `jwt-secret`: Generate using: `openssl rand -base64 64`
-- `mail-username`: Your Gmail address
-- `mail-password`: Your Gmail App Password (not regular password!)
+### Setup .env file:
+```powershell
+# Navigate to k8s folder
+cd k8s
+
+# Copy the example file
+Copy-Item .env.example .env
+
+# Edit .env file with your actual values
+notepad .env
+```
+
+### Required values in .env:
+- `SPRING_DATASOURCE_URL`: Your PostgreSQL database URL
+- `SPRING_DATASOURCE_USERNAME`: Database username
+- `SPRING_DATASOURCE_PASSWORD`: Database password
+- `JWT_SECRET`: Generate using: `openssl rand -base64 64` (or use PowerShell: `[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((New-Guid).ToString() + (New-Guid).ToString()))`)
+- `MAIL_USERNAME`: Your Gmail address
+- `MAIL_PASSWORD`: Your Gmail App Password (not regular password!)
 
 To get Gmail App Password:
 1. Go to Google Account Settings
 2. Security > 2-Step Verification
 3. App Passwords
 4. Generate new app password
+
+### Create Kubernetes Secrets from .env:
+```powershell
+# Run the script to create secrets from .env file
+.\create-secrets-from-env.ps1
+```
+
+**Important:** The `.env` file is already in `.gitignore` to prevent committing secrets to git
 
 ### Update Docker Image Names
 In the following files, replace `your-dockerhub-username` with your actual Docker Hub username:
@@ -95,8 +116,10 @@ cd ../k8s
 # Create namespace
 kubectl apply -f namespace.yaml
 
-# Create secrets and configmaps
-kubectl apply -f secrets.yaml
+# Create secrets from .env file
+.\create-secrets-from-env.ps1
+
+# Create configmaps
 kubectl apply -f configmap.yaml
 
 # Create persistent volume claims

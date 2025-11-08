@@ -58,6 +58,10 @@ data:
   CHATBOT_SERVICE_URL: "http://chatbot-service:8000"
   CHATBOT_PYTHON_SERVICE_URL: "http://chatbot-service:8000"
   CHATBOT_PYTHON_SERVICE_TIMEOUT: "30"
+  # CORS allowed origins (comma separated). Add your frontend external IP or domain here.
+  cors.allowed.origins: "http://34.42.2.114"
+  # Also expose as environment variable name Spring maps from (uppercase with underscores)
+  CORS_ALLOWED_ORIGINS: "http://34.42.2.114"
 ---
 apiVersion: v1
 kind: ConfigMap
