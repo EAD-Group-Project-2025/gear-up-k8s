@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: gearup
+data:
+  # Application Configuration
+  SPRING_APPLICATION_NAME: "gearup-backend"
+  
+  # Base URLs
+  APP_BASE_URL: "http://backend-service:8080"
+  APP_FRONTEND_URL: "http://frontend-service"
+  
+  # JPA Configuration
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+  SPRING_JPA_SHOW_SQL: "true"
+  SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+  SPRING_JPA_OPEN_IN_VIEW: "false"
+  
+  # Swagger Configuration
+  SPRINGDOC_SWAGGER_UI_PATH: "/swagger-ui.html"
+  SPRINGDOC_API_DOCS_ENABLED: "true"
+  SPRINGDOC_SWAGGER_UI_ENABLED: "true"
+  SPRINGDOC_API_DOCS_PATH: "/v3/api-docs"
+  
+  # JWT Expiration (in milliseconds)
+  JWT_EXPIRATION: "43200000"
+  JWT_REFRESH_EXPIRATION: "604800000"
+  JWT_EMAIL_VERIFICATION_EXPIRATION: "300000"
+  
+  # Email Configuration
+  SPRING_MAIL_HOST: "smtp.gmail.com"
+  SPRING_MAIL_PORT: "587"
+  SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+  SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+  SPRING_MAIL_DEFAULT_ENCODING: "UTF-8"
+  
+  # GraphQL Configuration
+  SPRING_GRAPHQL_PATH: "/graphql"
+  SPRING_GRAPHQL_GRAPHIQL_ENABLED: "true"
+  
+  # Redis Configuration
+  SPRING_DATA_REDIS_HOST: "redis-service"
+  SPRING_DATA_REDIS_PORT: "6379"
+  SPRING_DATA_REDIS_TIMEOUT: "60000"
+  
+  # Cache Configuration
+  SPRING_CACHE_TYPE: "redis"
+  SPRING_CACHE_REDIS_TIME_TO_LIVE: "3600000"
+  
+  # Async/SSE Configuration
+  SPRING_MVC_ASYNC_REQUEST_TIMEOUT: "1800000"  # 30 minutes for SSE connections
+  
+  # Chatbot Service
+  CHATBOT_SERVICE_URL: "https://your-chatbot-service-url.com"
+  CHATBOT_PYTHON_SERVICE_URL: "https://your-chatbot-service-url.com"
+  CHATBOT_PYTHON_SERVICE_TIMEOUT: "30"
+  
+  # CORS allowed origins (comma separated). Add your frontend external IP or domain here.
+  cors.allowed.origins: "http://localhost:3000,http://localhost:80,https://your-domain.com"
+  CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:80,https://your-domain.com"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: gearup
+data:
+  # Replace with your actual NodePort or LoadBalancer URL
+  NEXT_PUBLIC_API_URL: "http://YOUR_IP_OR_DOMAIN:PORT/api/v1"
+  NEXT_PUBLIC_GRAPHQL_URL: "http://YOUR_IP_OR_DOMAIN:PORT/graphql"
