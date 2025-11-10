@@ -60,6 +60,13 @@ spec:
               name: gearup-secrets
               key: mail-password
         
+        # Admin Configuration
+        - name: APP_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: app-admin-password
+        
         # ConfigMap values
         envFrom:
         - configMapRef:
@@ -67,11 +74,11 @@ spec:
         
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "500m"
+            memory: "256Mi"
+            cpu: "100m"
           limits:
-            memory: "2Gi"
-            cpu: "2000m"
+            memory: "512Mi"
+            cpu: "500m"
         
         # Commented out liveness probe to allow slow startup
         # livenessProbe:
