@@ -60,6 +60,13 @@ spec:
               name: gearup-secrets
               key: mail-password
         
+        # Admin Configuration
+        - name: APP_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gearup-secrets
+              key: app-admin-password
+        
         # ConfigMap values
         envFrom:
         - configMapRef:
